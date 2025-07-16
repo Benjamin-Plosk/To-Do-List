@@ -7,16 +7,20 @@
 </head>
 <body>
   <div class="todo-container">
-    <h1>My To-Do list</h1>
+    <h1>My To-Do List</h1>
+
     <div class="input-section">
-      <input type="text" id="taskInput" placeholder="Type a task">
+      <input type="text" id="taskInput" placeholder="Type a task" aria-label="Task input">
       <button onclick="addTask()">Add</button>
     </div>
-    <ul id="taskList"></ul>
+
+    <ul id="taskList" aria-label="Task list"></ul>
   </div>
 
   <script src="/static/script.js"></script>
+  <script>
+    // Carregar as tarefas ao abrir a página
+    document.addEventListener("DOMContentLoaded", loadTasksFromAPI);
+  </script>
 </body>
 </html>
-
-

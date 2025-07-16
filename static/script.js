@@ -4,29 +4,52 @@ async function chamarAPI() {
     alert(data.msg);
 }
 
-function addTask() {
-  const input = document.getElementById('taskInput');
-  const taskText = input.value.trim();
+// Carrega as notas salvas do banco de dados ao iniciar
+window.onload = async function () {
+    await carregarNotas();
+};
 
-  if (taskText === '') return;
+async function carregarNotas() {
+    const response = await fetch('/api/notas');
+    const notas = await response.json();
 
-  const li = document.createElement('li');
+    notas.forEach(nota => adicionarNotaNaTela(nota));
+}
 
-  // Added as concluded 
-  li.addEventListener('click', function () {
-    li.classList.toggle('completed');
-  });
+function adicionarNotaNaTela(nota) {
+    const li = document.createElement('li');
 
-  li.textContent = taskText;
+    // Permite marcar como concluída
+    li.addEventListener('click', function () {
+        li.classList.toggle('completed');
+    });
 
-  const deleteBtn = document.createElement('button');
-  deleteBtn.textContent = 'X';
-  deleteBtn.onclick = function () {
-    li.remove();
-  };
+    li.textContent = nota.texto;
 
-  li.appendChild(deleteBtn);
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'X';
+    deleteBtn.onclick = async function () {
+        await fetch(`/api/notas/${nota.id}`, { method: 'DELETE' });
+        li.remove();
+    };
 
-  document.getElementById('taskList').appendChild(li);
-  input.value = '';
+    li.appendChild(deleteBtn);
+    document.getElementById('taskList').appendChild(li);
+}
+
+async function addTask() {
+    const input = document.getElementById('taskInput');
+    const taskText = input.value.trim();
+
+    if (taskText === '') return;
+
+    const response = await fetch('/api/notas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ texto: taskText })
+    });
+
+    const novaNota = await response.json();
+    adicionarNotaNaTela(novaNota);
+    input.value = '';
 }
