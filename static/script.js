@@ -1,3 +1,9 @@
+async function chamarAPI() {
+    const response = await fetch('/api/mensagem');
+    const data = await response.json();
+    alert(data.msg);
+}
+
 function addTask() {
   const input = document.getElementById('taskInput');
   const taskText = input.value.trim();

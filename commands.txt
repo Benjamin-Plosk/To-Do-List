@@ -1,0 +1,17 @@
+Sincronizar com o github:
+No terminal:
+
+git add .
+git commit -m "Mensagem explicando as alterações feitas"
+git push
+
+
+Reabrir o servidor do FastAPI no terminal:
+
+venv\Scripts\activate
+uvicorn app.main:app --reload
+se não funcionar,
+python -m uvicorn app.main:app --reload
+
+acessar novamente no navegador:
+http://127.0.0.1:8000
