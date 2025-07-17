@@ -2,9 +2,8 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session, select
-
+from fastapi.middleware.cors import CORSMiddleware
 from app.models import Nota
 from app.database import engine, criar_bd
 

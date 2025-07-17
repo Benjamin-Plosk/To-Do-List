@@ -35,3 +35,10 @@ async function addTask() {
     adicionarNotaNaTela(novaNota);
     input.value = '';
 }
+
+window.onload = async function () {
+    const response = await fetch('/api/notas');
+    const notas = await response.json();
+    notas.forEach(adicionarNotaNaTela);
+};
+
