@@ -1,21 +1,3 @@
-async function chamarAPI() {
-    const response = await fetch('/api/mensagem');
-    const data = await response.json();
-    alert(data.msg);
-}
-
-// Carrega as notas salvas do banco de dados ao iniciar
-window.onload = async function () {
-    await carregarNotas();
-};
-
-async function carregarNotas() {
-    const response = await fetch('/api/notas');
-    const notas = await response.json();
-
-    notas.forEach(nota => adicionarNotaNaTela(nota));
-}
-
 function adicionarNotaNaTela(nota) {
     const li = document.createElement('li');
 
@@ -24,7 +6,7 @@ function adicionarNotaNaTela(nota) {
         li.classList.toggle('completed');
     });
 
-    li.textContent = nota.texto;
+    li.textContent = nota.conteudo;  // aqui mudou de texto para conteudo
 
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'X';
@@ -46,7 +28,7 @@ async function addTask() {
     const response = await fetch('/api/notas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ texto: taskText })
+        body: JSON.stringify({ conteudo: taskText })  // aqui também conteudo
     });
 
     const novaNota = await response.json();
