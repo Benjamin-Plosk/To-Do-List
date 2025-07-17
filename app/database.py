@@ -1,7 +1,6 @@
 from sqlmodel import SQLModel, create_engine
 
-sqlite_url = "sqlite:///notas.db"
-engine = create_engine(sqlite_url, echo=True)
+engine = create_engine("sqlite:///notas.db")
 
 def criar_bd():
     SQLModel.metadata.create_all(engine)
