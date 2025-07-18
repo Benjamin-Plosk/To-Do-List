@@ -1,9 +1,10 @@
+import os
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlmodel import Session, select
 from fastapi.middleware.cors import CORSMiddleware
+from sqlmodel import Session, select
 from app.models import Nota
 from app.database import engine, criar_bd
 
@@ -17,14 +18,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Create the database if not exists
+# Create the database if it doesn't exist
 criar_bd()
 
-# Serve static files (JS/CSS)
-app.mount("/static", StaticFiles(directory="../static"), name="static")
+# Resolve base directory (project root)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Set up Jinja2 template folder
-templates = Jinja2Templates(directory="../templates")
+# Mount static files
+static_path = os.path.join(BASE_DIR, "static")
+app.mount("/static", StaticFiles(directory=static_path), name="static")
+
+# Set up templates path
+templates_path = os.path.join(BASE_DIR, "templates")
+templates = Jinja2Templates(directory=templates_path)
 
 # Home route
 @app.get("/", response_class=HTMLResponse)
