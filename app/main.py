@@ -9,8 +9,7 @@ from app.database import engine, criar_bd
 
 app = FastAPI()
 
-
-# Permitir chamadas JS do navegador
+# Enable CORS for frontend JavaScript
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,26 +17,28 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Banco
+# Create the database if not exists
 criar_bd()
 
-# Ponto para servir arquivos CSS/JS
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Serve static files (JS/CSS)
+app.mount("/static", StaticFiles(directory="../static"), name="static")
 
-# Ponto para usar HTML com Jinja2
-templates = Jinja2Templates(directory="templates")
+# Set up Jinja2 template folder
+templates = Jinja2Templates(directory="../templates")
 
-# Página inicial
+# Home route
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+# Get all notes
 @app.get("/api/notas")
 async def listar_notas():
     with Session(engine) as session:
         notas = session.exec(select(Nota)).all()
         return notas
-    
+
+# Add a note
 @app.post("/api/notas")
 async def adicionar_nota(nota: Nota):
     with Session(engine) as session:
@@ -46,6 +47,7 @@ async def adicionar_nota(nota: Nota):
         session.refresh(nota)
         return nota
 
+# Delete a note
 @app.delete("/api/notas/{nota_id}")
 async def deletar_nota(nota_id: int):
     with Session(engine) as session:
@@ -55,7 +57,7 @@ async def deletar_nota(nota_id: int):
             session.commit()
         return {"ok": True}
 
-# Exemplo de API que retorna JSON
+# Example JSON endpoint
 @app.get("/api/mensagem")
 async def get_msg():
     return {"msg": "Hello world!"}
