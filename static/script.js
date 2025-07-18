@@ -55,10 +55,22 @@ async function addTask() {
 
 // Carrega notas da API ao iniciar
 async function loadTasksFromAPI() {
+    const taskList = document.getElementById('taskList');
+    taskList.innerHTML = ''; // limpa a lista antes de adicionar
+
     const response = await fetch('/api/notas');
     const notas = await response.json();
+
     notas.forEach(adicionarNotaNaTela);
 }
 
 // Executa ao carregar a página
-window.onload = loadTasksFromAPI;
+window.onload = function () {
+    loadTasksFromAPI();
+
+    // Liga o botão "Add" à função addTask
+    const addButton = document.getElementById('addTaskButton');
+    if (addButton) {
+        addButton.addEventListener('click', addTask);
+    }
+};
