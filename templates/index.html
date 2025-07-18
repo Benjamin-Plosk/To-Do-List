@@ -14,13 +14,16 @@
       <button onclick="addTask()">Add</button>
     </div>
 
+    <!-- Lista de tarefas -->
     <ul id="taskList" aria-label="Task list"></ul>
   </div>
 
   <script src="/static/script.js"></script>
   <script>
     // Carregar as tarefas ao abrir a página
-    document.addEventListener("DOMContentLoaded", loadTasksFromAPI);
+    document.addEventListener("DOMContentLoaded", () => {
+      loadTasksFromAPI();
+    });
   </script>
 </body>
 </html>

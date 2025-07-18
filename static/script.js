@@ -1,19 +1,17 @@
 function adicionarNotaNaTela(nota) {
     const li = document.createElement('li');
+    li.classList.add('nota-item');
 
-    // Permite marcar como concluída
-    li.addEventListener('click', function () {
-        li.classList.toggle('completed');
-    });
+    // Cria o elemento de texto editável
+    const span = document.createElement('span');
+    span.textContent = nota.conteudo;
+    span.contentEditable = true;
+    span.classList.add('nota-conteudo');
 
-    // Torna o conteúdo editável
-    li.contentEditable = true;
-    li.innerText = nota.conteudo;
-    li.classList.add('nota-editavel');
+    // Atualiza no backend quando o conteúdo é editado e perde o foco
+    span.addEventListener('blur', async function () {
+        const novoConteudo = span.innerText.trim();
 
-    // Atualiza no backend ao sair do campo (blur)
-    li.addEventListener('blur', async function () {
-        const novoConteudo = li.innerText.replace('X', '').trim(); // Remove botão X visual do texto
         await fetch(`/api/notas/${nota.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -24,12 +22,16 @@ function adicionarNotaNaTela(nota) {
     // Botão de deletar
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'X';
+    deleteBtn.classList.add('delete-button');
+
     deleteBtn.onclick = async function (event) {
-        event.stopPropagation(); // evita marcar como concluída
+        event.stopPropagation(); // evita qualquer ação no li
         await fetch(`/api/notas/${nota.id}`, { method: 'DELETE' });
         li.remove();
     };
 
+    // Adiciona elementos à lista
+    li.appendChild(span);
     li.appendChild(deleteBtn);
     document.getElementById('taskList').appendChild(li);
 }
@@ -43,7 +45,7 @@ async function addTask() {
     const response = await fetch('/api/notas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ conteudo: taskText })  // aqui também conteudo
+        body: JSON.stringify({ conteudo: taskText })
     });
 
     const novaNota = await response.json();
@@ -51,8 +53,12 @@ async function addTask() {
     input.value = '';
 }
 
-window.onload = async function () {
+// Carrega notas da API ao iniciar
+async function loadTasksFromAPI() {
     const response = await fetch('/api/notas');
     const notas = await response.json();
     notas.forEach(adicionarNotaNaTela);
-};
+}
+
+// Executa ao carregar a página
+window.onload = loadTasksFromAPI;
