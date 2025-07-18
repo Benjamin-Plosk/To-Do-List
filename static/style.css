@@ -92,3 +92,15 @@ li button {
 li button:hover {
   background: #c82333;
 }
+
+.nota-editavel {
+    border: 1px solid transparent;
+    padding: 6px;
+}
+
+.nota-editavel:focus {
+    outline: none;
+    border-color: #aaa;
+    background-color: #f3f3f3;
+}
+

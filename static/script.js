@@ -6,11 +6,26 @@ function adicionarNotaNaTela(nota) {
         li.classList.toggle('completed');
     });
 
-    li.textContent = nota.conteudo;  // aqui mudou de texto para conteudo
+    // Torna o conteúdo editável
+    li.contentEditable = true;
+    li.innerText = nota.conteudo;
+    li.classList.add('nota-editavel');
 
+    // Atualiza no backend ao sair do campo (blur)
+    li.addEventListener('blur', async function () {
+        const novoConteudo = li.innerText.replace('X', '').trim(); // Remove botão X visual do texto
+        await fetch(`/api/notas/${nota.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ conteudo: novoConteudo })
+        });
+    });
+
+    // Botão de deletar
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'X';
-    deleteBtn.onclick = async function () {
+    deleteBtn.onclick = async function (event) {
+        event.stopPropagation(); // evita marcar como concluída
         await fetch(`/api/notas/${nota.id}`, { method: 'DELETE' });
         li.remove();
     };
@@ -41,4 +56,3 @@ window.onload = async function () {
     const notas = await response.json();
     notas.forEach(adicionarNotaNaTela);
 };
-

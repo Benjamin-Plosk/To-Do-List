@@ -15,3 +15,5 @@ python -m uvicorn app.main:app --reload
 
 acessar novamente no navegador:
 http://127.0.0.1:8000
+
+Link Render no navegador: https://to-do-list-oat0.onrender.com
