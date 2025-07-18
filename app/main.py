@@ -21,8 +21,8 @@ app.add_middleware(
 # Create the database if it doesn't exist
 criar_bd()
 
-# Resolve base directory (project root)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Resolve base directory (project root, 1 level above /app)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Mount static files
 static_path = os.path.join(BASE_DIR, "static")
